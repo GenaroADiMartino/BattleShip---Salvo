@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<link href="https://fonts.googleapis.com/css?family=Play" rel="stylesheet">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+					crossorigin="anonymous">
+		<link type="text/css" rel="stylesheet" href="css/style.css">
+		<title> Games </title>
+	</head>
+	<body>
+		<h1 class="title">Salvo Games!</h1>
+		<div class="container">
+			<div id="app">
+				<h6>Current User: {{currentUser}}</h6>
+				<h6>{{createPlayerMessage}}</h6>
+				<div id="login-form">
+					<label v-if="userLoggedIn == false">Username: <input id="username" type="text" name="username"></label>
+					<label v-if="userLoggedIn == false">Password:&nbsp;<input id="password" type="password" name="password"></label>
+					<button @click="logout" v-if="userLoggedIn">Log out</button>
+					<button @click="login" v-else >Log in</button>
+					<button @click="createPlayer" v-if="userLoggedIn == false">Create Player</button>
+					<button @click="createGame" v-if="userLoggedIn == true">Create game</button>
+				</div>
+
+				<div id="scoresAndGames">
+					<table class="table">
+						<thead>
+							<th>Game</th>
+							<th>Date</th>
+							<th>Player 1</th>
+							<th>Player 2</th>
+							<th>Game Actions</th>
+						</thead>
+						<tbody>
+							<tr v-for="game in gamesList">
+								<td>{{game.game}}</td>
+								<td>{{game.date}}</td>
+								<td>{{game.player1}}</td>
+								<td>{{game.player2}}</td>
+								<td>
+									<button v-if="game.gameLink != 0" @click="goToGamePage(game.gameLink)">Open</button> 
+									<button @click="joinGame(game.game)" v-if="game.numberOfPlayers <2 && userLoggedIn && game.player1 != gameData.player.username ">Join</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<table class="table">
+						<thead>
+							<th>Player</th>
+							<th>Wins</th>
+							<th>Losses</th>
+							<th>Ties</th>
+							<th>Total Score</th>
+						</thead>
+						<tbody>
+							<tr v-for="player in scoreData">
+								<td>{{player.player}}</td>
+								<td>{{player.wins}}</td>
+								<td>{{player.losses}}</td>
+								<td>{{player.ties}}</td>
+								<td>{{player.totalscore}}</td>
+							</tr>
+						</tbody>
+					</table>		
+				</div>
+			</div>
+		</div>
+		<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+		<script src="scripts/games.js"></script>
+	</body>
+</html>

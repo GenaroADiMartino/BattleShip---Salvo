@@ -1,0 +1,206 @@
+body {
+	font-family: 'Play', sans-serif;
+	color: whitesmoke;
+	text-shadow: 2px 2px 4px #000000;
+	background: radial-gradient(rgba(0, 0, 0, 0.9), rgba(255, 255, 255, 0.1)), url(../images/background.jpg);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+}
+
+table {
+	background-image: linear-gradient(rgba(0, 0, 0, 1), rgba(0, 100, 160, 0.5));
+	border: 2px solid rgb(0, 0, 0, 0.5);
+	box-shadow: 0 10px 30px 0 rgba(255, 255,255, 0.7);
+}
+
+#app {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	height: 90%;
+}
+
+#scoresAndGames {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	margin-top: 50px;
+}
+
+#ships {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	margin-bottom: 50px;
+}
+
+#ship{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+}
+
+.tablesContainer {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+}
+
+.individualTable{
+	display: flex;
+	flex-flow: row wrap;
+	margin: auto;
+	justify-content: center;
+}
+
+.gridBox {
+	height: 42px;
+	width: 42px;
+	background-color: rgba(60, 60, 60, 0.5);
+	text-align: center;
+	border: 2px solid rgb(206, 206, 209,0.9);
+}
+
+td, tr {
+	border: solid 2px black;
+	text-align: center;
+}
+
+th,
+tr,
+td.droptarget {
+	width: 45px;
+	height: 45px
+}
+
+td.salvoTable:hover {
+    background-image: none;
+    background-color: red
+}
+
+#carrier.normal {
+	width: 520%;
+	height: 35px;
+	margin-left: 5px;
+	margin-top: 2px
+}
+
+#battleship.normal {
+	width: 410%;
+	height: 35px;
+	margin-left: 5px;
+	margin-top: 2px
+}
+
+#destroyer.normal {
+	width: 300%;
+	height: 35px;
+	margin-left: 5px;
+	margin-top: 2px
+}
+
+#submarine.normal {
+	width: 300%;
+	height: 35px;
+	margin-left: 5px;
+	margin-top: 2px
+}
+
+#patrolboat.normal {
+	width: 200%;
+	height: 35px;
+	margin-left: 3px;
+	margin-top: 2px
+}
+
+#patrolboat.rotate {
+	width: 180%;
+	height: 35px;
+	margin-left: 11px;
+	margin-top: 0px
+}
+
+#carrier.rotate {
+	width: 500%;
+	height: 35px;
+	margin-left: 10px;
+	margin-top: 0px
+}
+
+#battleship.rotate {
+	width: 410%;
+	height: 35px;
+	margin-left: 5px;
+	margin-top: 2px
+}
+
+#destroyer.rotate {
+	width: 280%;
+	height: 35px;
+	margin-left: 10px;
+	margin-top: 2px
+}
+
+#submarine.rotate {
+	width: 290%;
+	height: 35px;
+	margin-left: 10px;
+	margin-bottom: 2px
+}
+
+.rotate#carrier {
+	-ms-transform: rotate(90deg);
+	-webkit-transform: rotate(90deg);
+	transform: rotate(90deg);
+	transform-origin: 6% 50%
+}
+
+.rotate#patrolboat {
+	-ms-transform: rotate(90deg);
+	-webkit-transform: rotate(90deg);
+	transform: rotate(90deg);
+	transform-origin: 15% 50%
+}
+
+.rotate {
+	-ms-transform: rotate(90deg);
+	-webkit-transform: rotate(90deg);
+	transform: rotate(90deg);
+	transform-origin: 10% 50%
+}
+
+.normal {
+	-ms-transform: rotate(0deg);
+	-webkit-transform: rotate(0deg);
+	transform: rotate(0deg);
+}
+
+.shipcontainer {
+	float: left;
+	width: 50px;
+	margin-right: 70px;
+	margin: 10px;
+	padding: 10px;
+	height: 50px
+}
+
+.title {
+	text-align: center;
+}
+
+.miss {
+    background-image: url("");
+    background-color: green;
+    width: 42px;
+    height: 42px
+}
+
+.hit {
+    background-image: url("");
+    background-color: red;
+    width: 42px;
+    height: 42px
+}
+
+
+
