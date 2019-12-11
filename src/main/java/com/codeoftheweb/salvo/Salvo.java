@@ -11,7 +11,7 @@ public class Salvo {
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
 	@GenericGenerator(name = "native", strategy = "native")
 	private long id;
-	private long turn;  
+	private Integer turn;  
 
 	// Relacion con GamePlayer
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -24,7 +24,7 @@ public class Salvo {
 	//Mètodos
 	public Salvo(){}
 
-	public Salvo(long turn, List<String> salvoLocations, GamePlayer gamePlayer) {
+	public Salvo(Integer turn, List<String> salvoLocations, GamePlayer gamePlayer) {
 		this.turn = turn;
 		this.salvoLocations = salvoLocations;
 		this.gamePlayer = gamePlayer;
@@ -38,11 +38,11 @@ public class Salvo {
 		return this.gamePlayer;
 	}
 
-	public void setGamePlayer(GamePlayer gamePlayer) {
+	public void setGamePlayer(GamePlayer gamePlayer) {  //
 		this.gamePlayer = gamePlayer;
 	}
 
-	public long getTurn() {
+	public Integer getTurn() {
 		return this.turn;
 	}
 

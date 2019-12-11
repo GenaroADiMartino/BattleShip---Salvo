@@ -56,14 +56,16 @@ public class SalvoApplication {
 			playerRepository.save(Tony_Almeida);
 
 			// New Games
-			Game game1 = new Game(1);
-			Game game2 = new Game(2);
-			Game game3 = new Game(3);
-			Game game4 = new Game(4);
-			Game game5 = new Game(5);
-			Game game6 = new Game(6);
-			Game game7 = new Game(7);
-			Game game8 = new Game(8);
+			Date date = new Date();
+			Game game1 = new Game(date, false);
+			Game game2 = new Game(date, false);
+			Game game3 = new Game(date, false);
+			Game game4 = new Game(date, false);
+			Game game5 = new Game(date, false);
+			Game game6 = new Game(date, false);
+			Game game7 = new Game(date, false);
+			Game game8 = new Game(date, false);
+
 			gameRepository.save(game1);
 			gameRepository.save(game2);
 			gameRepository.save(game3);
@@ -74,20 +76,20 @@ public class SalvoApplication {
 			gameRepository.save(game8);
 
 			// New GamePlayers
-			gameplayerRepository.save(new GamePlayer(game1, Jack_Bauer));
-			gameplayerRepository.save(new GamePlayer(game1, Chloe_Obrian));
-			gameplayerRepository.save(new GamePlayer(game2, Jack_Bauer));
-			gameplayerRepository.save(new GamePlayer(game2, Chloe_Obrian));
-			gameplayerRepository.save(new GamePlayer(game3, Chloe_Obrian));
-			gameplayerRepository.save(new GamePlayer(game3, Tony_Almeida));
-			gameplayerRepository.save(new GamePlayer(game4, Chloe_Obrian));
-			gameplayerRepository.save(new GamePlayer(game4, Jack_Bauer));
-			gameplayerRepository.save(new GamePlayer(game5, Tony_Almeida));
-			gameplayerRepository.save(new GamePlayer(game5, Jack_Bauer));
-			gameplayerRepository.save(new GamePlayer(game6, Kim_Bauer));
-			gameplayerRepository.save(new GamePlayer(game7, Tony_Almeida));
-			gameplayerRepository.save(new GamePlayer(game8, Kim_Bauer));
-			gameplayerRepository.save(new GamePlayer(game8, Tony_Almeida));
+			gameplayerRepository.save(new GamePlayer(Jack_Bauer, game1, date));
+			gameplayerRepository.save(new GamePlayer(Chloe_Obrian, game1, date));
+			gameplayerRepository.save(new GamePlayer(Jack_Bauer, game2, date));
+			gameplayerRepository.save(new GamePlayer(Chloe_Obrian, game2, date));
+			gameplayerRepository.save(new GamePlayer(Chloe_Obrian, game3, date));
+			gameplayerRepository.save(new GamePlayer(Tony_Almeida, game3, date));
+			gameplayerRepository.save(new GamePlayer(Chloe_Obrian, game4, date));
+			gameplayerRepository.save(new GamePlayer(Jack_Bauer, game4, date));
+			gameplayerRepository.save(new GamePlayer(Tony_Almeida, game5, date));
+			gameplayerRepository.save(new GamePlayer(Jack_Bauer, game5, date));
+			gameplayerRepository.save(new GamePlayer(Kim_Bauer, game6, date));
+			gameplayerRepository.save(new GamePlayer(Tony_Almeida, game7, date));
+			gameplayerRepository.save(new GamePlayer(Kim_Bauer, game8, date));
+			gameplayerRepository.save(new GamePlayer(Tony_Almeida, game8, date));
 
 			//New Ships		
 			//Carrier 5 - Battleship 4 - Submarine 3 - Destroyer 3 - Patrolboat 2
@@ -98,7 +100,7 @@ public class SalvoApplication {
 			shipRepository.save(new Ship("patrolboat", Arrays.asList("B4", "B5"), gameplayerRepository.findByGameAndPlayer(game1, Jack_Bauer)));
 			shipRepository.save(new Ship("carrier", Arrays.asList("A5", "A6", "A7", "A8", "A9"), gameplayerRepository.findByGameAndPlayer(game1, Chloe_Obrian)));
 			shipRepository.save(new Ship("destroyer", Arrays.asList("C9", "D9", "E9"), gameplayerRepository.findByGameAndPlayer(game1, Chloe_Obrian)));
-			shipRepository.save(new Ship("battleship", Arrays.asList("E4", "E5", "E6", "E7"), gameplayerRepository.findByGameAndPlayer(game1, Chloe_Obrian)));
+			shipRepository.save(new Ship("battleship", Arrays.asList("H1", "H2", "H3", "H4"), gameplayerRepository.findByGameAndPlayer(game1, Chloe_Obrian)));
 			shipRepository.save(new Ship("submarine", Arrays.asList("H8", "H9", "H10"), gameplayerRepository.findByGameAndPlayer(game1, Chloe_Obrian)));
 			shipRepository.save(new Ship("patrolboat", Arrays.asList("J1", "J2"), gameplayerRepository.findByGameAndPlayer(game1, Chloe_Obrian)));
 			shipRepository.save(new Ship("carrier", Arrays.asList("C5", "C6", "C7", "C8", "C9"), gameplayerRepository.findByGameAndPlayer(game2, Jack_Bauer)));
@@ -113,7 +115,7 @@ public class SalvoApplication {
 			shipRepository.save(new Ship("patrolboat", Arrays.asList("I1", "I2"), gameplayerRepository.findByGameAndPlayer(game2, Chloe_Obrian)));
 			shipRepository.save(new Ship("carrier", Arrays.asList("C5", "C6", "C7", "C8", "C9"), gameplayerRepository.findByGameAndPlayer(game3, Chloe_Obrian)));
 			shipRepository.save(new Ship("destroyer", Arrays.asList("E9", "F9", "G9"), gameplayerRepository.findByGameAndPlayer(game3, Chloe_Obrian)));
-			shipRepository.save(new Ship("battleship", Arrays.asList("E4", "E5", "E6", "E7"), gameplayerRepository.findByGameAndPlayer(game3, Chloe_Obrian)));
+			shipRepository.save(new Ship("battleship", Arrays.asList("G1", "G2", "G3", "G4"), gameplayerRepository.findByGameAndPlayer(game3, Chloe_Obrian)));
 			shipRepository.save(new Ship("submarine", Arrays.asList("A1", "A2", "A3"), gameplayerRepository.findByGameAndPlayer(game3, Chloe_Obrian)));
 			shipRepository.save(new Ship("patrolboat", Arrays.asList("J5", "J6"), gameplayerRepository.findByGameAndPlayer(game3, Chloe_Obrian)));
 			shipRepository.save(new Ship("carrier", Arrays.asList("E4", "E5", "E6", "E7", "E8"), gameplayerRepository.findByGameAndPlayer(game3, Tony_Almeida)));
@@ -145,7 +147,7 @@ public class SalvoApplication {
 			// New Salvos
 			salvoRepository.save(new Salvo(1, Arrays.asList("B5", "C5", "A1", "B2", "C3"), gameplayerRepository.findByGameAndPlayer(game1, Jack_Bauer)));
 			salvoRepository.save(new Salvo(1, Arrays.asList("B4", "B5", "B6", "B7", "B8"), gameplayerRepository.findByGameAndPlayer(game1, Chloe_Obrian)));
-			salvoRepository.save(new Salvo(2, Arrays.asList("F2", "D5", "F3", "A5", "A6"), gameplayerRepository.findByGameAndPlayer(game1, Jack_Bauer)));
+			salvoRepository.save(new Salvo(2, Arrays.asList("F2", "D5", "A7", "A5", "A6"), gameplayerRepository.findByGameAndPlayer(game1, Jack_Bauer)));
 			salvoRepository.save(new Salvo(2, Arrays.asList("E1", "H3", "A3", "A4", "A5"), gameplayerRepository.findByGameAndPlayer(game1, Chloe_Obrian)));
 			salvoRepository.save(new Salvo(1, Arrays.asList("A2", "A4", "G6", "G7", "G8"), gameplayerRepository.findByGameAndPlayer(game2, Jack_Bauer)));			
 			salvoRepository.save(new Salvo(1, Arrays.asList("B5", "D5", "C7", "C8", "C9"), gameplayerRepository.findByGameAndPlayer(game2, Chloe_Obrian)));			

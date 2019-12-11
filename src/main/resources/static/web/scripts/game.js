@@ -4,14 +4,19 @@ var app = new Vue({
 		rows: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
 		columns: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
 		gameData: {},
-		placing: true,
-		shipLocations: [],
-		usernames: [],
+        timer: setInterval(function () {}, 0),
+		message: "",
+		numberOfOppSalvoes: 0,
 		turn: 1,
+		placing: true,
+		gameOver: false,
+		allowed: true,
+		shooting: true,
+		usernames: [],	
+		shipLocations: [],
 		salvo: [],
 		allShots: [],
 		locations: [],
-		allowed: true,
 		currentShip: [],
 		allShips: {
 			carrier: {
@@ -58,33 +63,80 @@ var app = new Vue({
 						},
 					)
 			},
-
-      onConversionToJsonSuccessful: function (json) {
-          this.gameData = json;
-          if (this.gameData.gameview.ships.length == 5) {
-              this.getShips()
-              this.getPlayers()
-              this.placing = false
-              if (this.gameData.gameview.your_salvoes != null) {
-                  this.getSalvoes(this.gameData.gameview.your_salvoes, "salvo ")
-              }
-              if (this.gameData.gameview.opp_salvoes != null) {
-                  this.getSalvoes(this.gameData.gameview.opp_salvoes, "ship ")
-              };
-          } else if (
-              this.gameData.gameview.ships.length < 5) {
-              this.getShips()
-              this.placing = true;
-          } else {
-              this.placing = true;
-          }
+	
+		onConversionToJsonSuccessful: function (json) {
+			app.gameData = json;
+			this.getShips();
+			this.getPlayers();
+			if (this.gameData.gameview.ships.length !== 5) {
+				this.placing = true
+			} 
+			else {
+				this.placing = false
+			}
+			if (this.gameData.gameview.gamestate.gameOver == true) {
+                this.placing = false;
+                this.game_Over();
+            }
+            if (this.gameData.gameview.gamestate.state !== "waiting for second player" && this.gameData.gameview.gamestate.playerToFire.toString() == this.determineGamePlayer() && this.gameOver !== true) {
+                this.StopCheckForServerData()
+                this.getShips();
+                this.getPlayers();
+            }
+			else if (this.shooting == true) {
+                this.StartCheckServerForData()
+            }
+			if (this.gameData.gameview.your_salvoes != null) {
+				this.getSalvoes(this.gameData.gameview.your_salvoes, this.gameData.gameview.your_hits, "salvo ")
+			}
+			if (this.gameData.gameview.opp_salvoes != null) {
+				this.getSalvoes(this.gameData.gameview.opp_salvoes, this.gameData.gameview.opp_hits, "ship ")
+			}
 		},
 
 		onDataFetched: function (response) {
-			response.json()
-				.then(this.onConversionToJsonSuccessful)
-		},
+            response.json()
+                .then(this.onConversionToJsonSuccessful)
+        },	
 
+		StartCheckServerForData: function () {
+            this.timer = setInterval(function () {
+                app.getDataObject(app.determineGamePlayer())
+            }, 2000)
+            this.waitingForOtherPlayer()
+        },
+		
+        StopCheckForServerData: function () {
+            clearInterval(this.timer)
+            this.playerToFire()
+        },
+
+        waitingForOtherPlayer: function () {
+            document.getElementById("salvoTableTotal").style.opacity = "0.5"
+            this.shooting = false
+            this.message = "Waiting for other player"
+        },
+		
+        playerToFire: function () {
+            document.getElementById("salvoTableTotal").style.opacity = "1"
+            this.shooting = true;
+            clearInterval(this.timer);
+        },
+		
+        game_Over: function () {
+            document.getElementById("salvoTableTotal").style.opacity = "0.5"
+            this.shooting = false
+            this.gameOver = true
+            clearInterval(this.timer)
+            if (this.gameData.gameview.gamestate.winner == this.determineGamePlayer()) {
+                this.message = "Game Over!! You Win!!"
+            } else if (this.gameData.gameview.gamestate.winner == "tie") {
+                this.message = "Game Over!! It's a tie!"
+            } else {
+                this.message = "Game Over!! You Lose!!"
+            }
+        },
+		
 		determineGamePlayer: function () {
 			var url = location.search;
 			var x = url.split('=')[1];
@@ -117,25 +169,29 @@ var app = new Vue({
 			}
 		},
 
-		getSalvoes: function (salvotype, grid) {
-			for (i = 0; i < salvotype.length; i++) {
-				for (j = 0; j < salvotype[i].location.length; j++) {
-					let shot = salvotype[i].location[j];
+		getSalvoes: function (salvoType, hitType, grid) {
+			for (i = 0; i < salvoType.length; i++) {
+				for (j = 0; j < salvoType[i].location.length; j++) {
+					let shot = salvoType[i].location[j];
 					let cell = document.getElementById(grid + shot);
-					if (shot != "" && salvotype == this.gameData.gameview.your_salvoes) {
-						cell.className += " miss";   
-					} else if (shot != "") {
-						cell.className += " miss";
-					};
-					for (var vessel in this.allShips) {
-						locations = eval("this.allShips." + vessel + ".locations")
-						if (locations.includes(shot) && salvotype == this.gameData.gameview.opp_salvoes) {
-							cell.className += " hit";   
+					if (hitType.includes(shot)) {
+						cell.className += " hit";
+					    cell.style.backgroundColor = "red"
+						if (cell.firstChild && cell.childElementCount < 2) {
+							if (cell.firstChild.className == "rotate" || cell.firstChild.className == "normal") {
+							    cell.className = "fire"
+							}
+						} 
+						else if (cell.childElementCount < 2) { 
+						    cell.className = "fire"
 						}
+					} 
+					else if (!shot == "") {
+						cell.className = " miss"
 					}
-					this.allShots.push(shot)
 				}
 			}
+			this.numberOfOppSalvoes = this.gameData.gameview.opp_salvoes.length
 		},
 
 		getPlayers: function () {
@@ -169,7 +225,8 @@ var app = new Vue({
 				for (i = location.slice(6); i < (parseInt(location.slice(6)) + shipLength); i++) {
 					if (i < 11) {
 						this.checkLocation((location[5] + i), ship)
-					} else {
+					} 
+					else {
 						this.allowed = false
 					}
 					if (this.allowed == true) {
@@ -187,7 +244,8 @@ var app = new Vue({
 				for (i = 0; i < shipLength; i++) {
 					if (rowNumber < 10) {
 						this.checkLocation((this.rows[rowNumber] + location.slice(6)), ship)
-					} else {
+					} 
+					else {
 						this.allowed = false
 					}
 					if (this.allowed == true) {
@@ -276,10 +334,9 @@ var app = new Vue({
 		},
 		
 		sendSalvo: function () {
-		  actual_turn = this.gameData.gameview.your_salvoes.length++
 			if (this.salvo.length == 5) {
 				salvo = {
-					turn: ++actual_turn,
+                    turn: this.gameData.gameview.gamestate.turn,
 					salvoLocations: this.salvo
 				}
 				fetch("/api/games/players/" + this.determineGamePlayer() + "/salvos", {
@@ -290,30 +347,37 @@ var app = new Vue({
 							'Content-Type': 'application/json'
 						},
 						body: JSON.stringify(salvo)
-					}).then(response => console.log(response))
+					})
 					.then(this.salvo = [])
-					alert("Saved salvos...")
+					.then(r => {
+                        this.getDataObject(app.determineGamePlayer())
+                    })
+			//		alert("Saved salvos...")
 			} else {
 				alert("Please shots 5 fired!")
 			}
 		},
-		
+
 		placeShot: function (shotCell) {
-			if(!this.allShots.includes(shotCell)){
-				if (!this.salvo.includes(shotCell)) {
-					if (this.salvo.length < 5) {
-						document.getElementById("salvo " + shotCell).className += " miss"
-						this.salvo.push(shotCell);
-						this.allShots.push(shotCell)
-						console.log(this.salvo)
-					} else {
-						alert("Please shots 5 fired!")
+			if (this.gameData.gameview.gamestate.playerToFire.toString() == this.determineGamePlayer()) {
+				if (!this.allShots.includes(shotCell) || this.salvo.includes(shotCell)) {
+					if (!this.salvo.includes(shotCell)) {
+						if (this.salvo.length < 5) {
+							document.getElementById("salvo " + shotCell).className += " shot"
+							this.salvo.push(shotCell);
+							this.allShots.push(shotCell)
+							console.log(this.salvo)
+						} 
+						else {
+							alert("Please shots 5 fired!")
+						}
+					} 
+					else {
+						this.salvo = this.salvo.filter(e => e !== shotCell);
+						this.allShots = this.allShots.filter(e => e !== shotCell);
+						document.getElementById("salvo " + shotCell).className = "salvoTable"
+						console.log("Shot deleted.....")
 					}
-				} else {
-					this.salvo = this.salvo.filter(e => e !== shotCell);
-					this.allShots = this.allShots.filter(e => e !== shotCell);
-					console.log(this.allShots)
-					document.getElementById("salvo " + shotCell).className -= " salvoTable"
 				}
 			}
 		},	
@@ -346,9 +410,9 @@ function drop(event, el) {
 		event.preventDefault();
 		var data = event.dataTransfer.getData("text");
 		app.determineLocation(event.target.id, data);
-		if (el.firstChild || app.allowed == false) {} else {
+		if (el.firstChild || app.allowed == false) {} 
+		else {
 			el.appendChild(document.getElementById(data));
-			event.target.style.backgroundColor = ""
 		}
 	}
 }

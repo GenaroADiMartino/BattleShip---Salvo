@@ -54,7 +54,11 @@ public class Player {
 
 	@JsonIgnore
 	public List<Game> getGames() {
-		return gamePlayers.stream().sorted((gp1,gp2) -> (int)(gp1.getId() - gp2.getId())).map(gp -> gp.getGame()).collect(toList());
+		return gamePlayers
+			.stream()
+			.sorted((gp1,gp2) -> (int)(gp1.getId() - gp2.getId()))
+			.map(gp -> gp.getGame())
+			.collect(toList());
 	}
 
 	public Set<Score> getScores() {

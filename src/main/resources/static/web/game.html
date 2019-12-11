@@ -2,7 +2,7 @@
 <html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 
 	<head>
-		<title>Ships locations!</title>
+		<title>Battleship Game</title>
 		<link href="https://fonts.googleapis.com/css?family=Play" rel="stylesheet">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
 					crossorigin="anonymous">
@@ -45,37 +45,71 @@
 					</div>
 				</div>
 				<div>
-					<h3 class="title" v-show="placing == false">{{usernames[0]}} vs. {{usernames[1]}}</h3>
-					<h3 class="title" v-show="placing">Please place your Ships</h3>
-					<div class="tablesContainer">
-						<table class="individualTable">
-							<thead>
-							</thead>
-							<tbody>
-								<th class="gpRow"></th>
-								<th v-for="column in columns" class="gridBox">{{column}}</th>
-								<tr v-for="row in rows" class="gpRow">
-									<th class="gridBox">{{row}}</th>
-									<td v-for="column in columns" v-bind:id="'ship ' + row+column" class="shipTable gridBox" ondrop="drop(event, this)" ondragover="allowDrop(event)" class="droptarget"></td>
-								</tr>
-							</tbody>
-						</table>
-						<table class="individualTable" v-show="placing == false">
-							<thead>
-							</thead>
-							<tbody>
-								<th class="gpRow"></th>
-								<th v-for="column in columns" class="gridBox">{{column}}</th>
-								<tr v-for="row in rows" class="gpRow">
-									<th class="gridBox">{{row}}</th>
-									<td v-for="column in columns" v-bind:id="'salvo ' + row+column" class="salvoTable gridBox" @click="placeShot(row+column)"></td>
-							</tbody>
-						</table>
+					<div><h3 class="title" v-show="placing == false">{{usernames[0]}} vs. {{usernames[1]}}</h3>
+						<div class="title_ships" v-show="placing == false">
+							<h3>YOUR SHIPS</h3>
+							<h3>OPPONENT SHIPS</h3>
+						</div>
+						<h3 class="title" v-show="placing">Please place your Ships</h3>
+						<div class="tablesContainer">
+							<table class="individualTable">
+								<thead>
+								</thead>
+								<tbody>
+									<th class="gpRow"></th>
+									<th v-for="column in columns" class="gridBox">{{column}}</th>
+									<tr v-for="row in rows" class="gpRow">
+										<th class="gridBox">{{row}}</th>
+										<td v-for="column in columns" v-bind:id="'ship ' + row+column" class="shipTable gridBox" ondrop="drop(event, this)" ondragover="allowDrop(event)" class="droptarget"></td>
+									</tr>
+								</tbody>
+							</table>
+							<table id="salvoTableTotal" class="gpRow individualTable" v-show="placing == false">
+								<thead>	
+								</thead>
+								<tbody>
+									<tr>
+										<th><h2 v-if="shooting == false" class="waitingMessage">{{message}}</h2></th>
+										<th v-for="column in columns" class="gridBox">{{column}}</th>
+									</tr>
+									<tr v-for="row in rows" class="gpRow">
+										<th class="gridBox">{{row}}</th>
+										<td v-for="column in columns" v-bind:id="'salvo ' + row+column" class="salvoTable gridBox" @click="placeShot(row+column)"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="container">
+							<table class="table tabla_story" v-show="placing == false">
+								<thead>
+									<tr>
+										<th class="gridBox" colspan="2">Hits on you</th>
+										<th class="gridBox" colspan="2">Hits on opponent</th>
+									</tr>
+									<tr>
+										<th class="gridBox" >Hits</th>
+										<th class="gridBox" >Sunks</th>
+										<th class="gridBox" >Hits</th>
+										<th class="gridBox" >Sunks</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr v-for="data in gameData">
+										<td>{{data.opp_hits}}</td>
+										<td>{{data.your_sinks}}</td>
+										<td>{{data.your_hits}}</td>
+										<td>{{data.opp_sinks}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
-				</div>
-				<button @click="go_back">Go back</button>
-				<button @click="sendSalvo" class="button wide" v-if="placing == false">Fire salvo!</button>
-				<button @click="makeShipJSON" v-show="placing">Done</button>
+					<div class="rightSideButtons">
+						<button @click="go_back">Go back</button>
+						<button @click="sendSalvo" class="button wide" v-if="placing == false">Fire salvo!</button>
+						<button @click="makeShipJSON" v-show="placing">Start Game</button>
+					</div>
+				</div>		
 			</div>
 		</div>
 		<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>

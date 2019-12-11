@@ -5,6 +5,9 @@ import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
+
 @Entity
 public class GamePlayer {
 
@@ -35,9 +38,10 @@ public class GamePlayer {
 	//Métodos
 	public GamePlayer() {}
 
-	public GamePlayer(Game game, Player player) {
-		this.game = game;
+	public GamePlayer(Player player, Game game, Date date) {
+		this.gameDate = date;
 		this.player = player;
+		this.game = game;
 	}
 
 	public long getId() {
@@ -57,7 +61,10 @@ public class GamePlayer {
 	}
 
 	public Set<Ship> getShips() {
-		return this.ships.stream().sorted((s1,s2) -> (int)(s1.getId() - s2.getId())).collect(Collectors.toCollection(LinkedHashSet::new));
+		return this.ships
+			.stream()
+			.sorted((s1,s2) -> (int)(s1.getId() - s2.getId()))
+			.collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 	public Set<Salvo> getSalvoes() {
@@ -65,9 +72,24 @@ public class GamePlayer {
 	}
 
 	public Score getScore () {
-		return player.getScores().stream().filter(s -> s.getGame() == game).findFirst().orElse(null);
+		return player.getScores()
+			.stream()
+			.filter(s -> s.getGame() == game)
+			.findFirst()
+			.orElse(null);
 	}
 
+	public GamePlayer getOpponent(){
+		List<GamePlayer> gamePlayerListFiltered = this.getGame()
+			.getGamePlayers()
+			.stream()
+			.filter(gamePlayer -> gamePlayer.getId() != (this.getId()))
+			.collect(toList());
+		if(gamePlayerListFiltered.size()==0){
+			return null;
+		}
+		return gamePlayerListFiltered.get(0);
+	}
 
 	//Salida DTO GamePlayer
 	public Map<String, Object> makeGamePlayerDTO() {
@@ -80,4 +102,5 @@ public class GamePlayer {
 		}
 		return dto;
 	}
+
 }

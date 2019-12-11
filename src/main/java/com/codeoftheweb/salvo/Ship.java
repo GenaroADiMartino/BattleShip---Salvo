@@ -2,9 +2,9 @@ package com.codeoftheweb.salvo;
 
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
 
 @Entity
 public class Ship {
@@ -44,7 +44,7 @@ public class Ship {
 		return gamePlayer;
 	}
 
-	public void setGamePlayer(GamePlayer gamePlayer) {
+	public void setGamePlayer(GamePlayer gamePlayer) {  //
 		this.gamePlayer = gamePlayer;
 	}
 
@@ -52,11 +52,38 @@ public class Ship {
 		return shipLocations;
 	}
 
+	//Other Methods implemented (Game Logic)
+	private List<String> salvoLocations (GamePlayer gamePlayer) {
+		return gamePlayer.getSalvoes()
+			.stream()
+			.flatMap(salvo -> salvo.getSalvoLocations().stream())
+			.collect(Collectors.toList());
+	}
+
+	public List<String> getHits(){
+		return this.getShipLocations()
+			.stream()
+			.filter(cell -> salvoLocations(gamePlayer).contains(cell))
+			.collect(toList());
+	}
+
+	public boolean getSinks(){
+		return this.getShipLocations()
+			.stream()
+			.allMatch(location -> this.getHits()
+								.stream()
+								.anyMatch(hit -> hit.equals(location)));
+	}
+
 	//Salida DTO Ships
 	public Map<String, Object> makeShipDTO() {
-		Map<String, Object> dto = new LinkedHashMap<>();
+		Map<String, Object> dto = new LinkedHashMap<String, Object>();
 		dto.put("shipType", this.getShipType());
 		dto.put("shipLocations", this.getShipLocations());
+		if(this.getGamePlayer().getGame().getGamePlayers().size() == 2){
+			dto.put("sunk", this.getSinks());
+		}
 		return dto;
 	}
+
 }
